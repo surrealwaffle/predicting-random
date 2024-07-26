@@ -217,7 +217,7 @@ constexpr auto solver::feed(value_type value) noexcept -> std::optional<generato
     if (value != expected) {
       assert(value == (expected + 1uL));
       
-      if (equations.push(q31, true) || equations.push(q3, true) || equations.push(q0, false))
+      if (equations.push(q31, true) || equations.push(q3, true))
         return solve();
     }
   }
