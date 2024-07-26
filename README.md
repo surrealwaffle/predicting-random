@@ -7,8 +7,8 @@ Building has to be done manually for this project. It's small enough for it anyw
 `g++ -std=c++20 test_solver.cpp` builds an executable that attempts to solve the 
 PRNG of the seed supplied on the command line.
 
-For `g++`, it is recommended to use `-O3 -march=native` for performance.
-Using `clang++`, it is recommended to use `-O2 -march=native`.
+Critical portions of the code can be auto-vectorized. It is recommended to compile 
+with `-O3` and `-O2` with `g++` and `clang++`, respectively.
 
 # How It Works
 The structure of `glibc` LFSR-based `random()` allows one to observe output from 
