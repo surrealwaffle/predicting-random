@@ -3,7 +3,8 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          https://www.boost.org/LICENSE_1_0.txt)
 
-#pragma once
+#ifndef PREDICTING_RANDOM_SOLVER_HPP
+#define PREDICTING_RANDOM_SOLVER_HPP
 
 // ---------------------------------------------------------------------------------
 // SOLVER EXPLANATION
@@ -292,3 +293,5 @@ constexpr bool semicanonical_b32x32::push_row(row_type row) noexcept
   
   return true;
 }
+
+#endif // PREDICTING_RANDOM_SOLVER_HPP

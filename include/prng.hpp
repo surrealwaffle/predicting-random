@@ -3,7 +3,8 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          https://www.boost.org/LICENSE_1_0.txt)
 
-#pragma once
+#ifndef PREDICTING_RANDOM_PRNG_HPP
+#define PREDICTING_RANDOM_PRNG_HPP
 
 #include <cstdint>
 
@@ -105,3 +106,5 @@ constexpr auto reference_generator::table_from_seed(result_type seed) noexcept
   
   return result;
 }
+
+#endif // PREDICTING_RANDOM_PRNG_HPP

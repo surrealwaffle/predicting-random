@@ -3,7 +3,8 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          https://www.boost.org/LICENSE_1_0.txt)
 
-#pragma once
+#ifndef PREDICTING_RANDOM_CYCLIC_FIXED_QUEUE_HPP
+#define PREDICTING_RANDOM_CYCLIC_FIXED_QUEUE_HPP
 
 #include <cassert>
 #include <cstddef>
@@ -387,3 +388,5 @@ private:
   difference_type front_ = 0;
   difference_type size_ = 0;
 };
+
+#endif // PREDICTING_RANDOM_CYCLIC_FIXED_QUEUE_HPP
