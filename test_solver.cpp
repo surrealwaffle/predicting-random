@@ -3,28 +3,36 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          https://www.boost.org/LICENSE_1_0.txt)
 
+// USAGE: (program) <SEED>
+// Attempts to reconstruct a generator following glibc random() given non-zero SEED.
+// 
+// When reconstructed, the state table of both the reference generator and the 
+// reconstructed generator are output for manual verification.
+
 #include <cstdio>
 #include <cstdlib>
+
+#include <functional>
 
 #include "prng.hpp"
 #include "solver.hpp"
 
-constexpr auto solve_prng(reference_generator& gen) noexcept
-  -> std::pair<long long, reference_generator>
+namespace
 {
-  long long steps = 0;
-  solver s;
-  
-  std::optional<reference_generator> result;
-  auto try_solve = [&] () -> bool {
-    ++steps;
-    return (result = s.feed(gen())).has_value();
+  struct reconstruction_result
+  {
+    long long           steps; ///< The number of values fed to the solver.
+    reference_generator gen;   ///< The reconstructed generator.
   };
-  for (result = std::nullopt; !try_solve();) {
-    /* DO NOTHING */
-  }
   
-  return std::make_pair(steps, *result);
+  /**
+   * \brief Reconstructs a #reference_generator from its output.
+   *
+   * \param [in] gen The function that provides the output of the generator to 
+   *                 reconstruct.
+   */
+  reconstruction_result reconstruct_prng(
+    std::function<reference_generator::result_type()> gen) noexcept;
 }
 
 int main(int argc, char* argv[])
@@ -35,12 +43,20 @@ int main(int argc, char* argv[])
   }
   
   const unsigned long long seed = static_cast<unsigned long long>(std::atoll(argv[1]));
+  if (seed == 0)
+  {
+    std::printf("%s\n", "Please provide a non-zero seed");
+    return EXIT_FAILURE;
+  }
+  
   std::printf("testing seed: %llu\n", seed);
-  
   reference_generator gen{static_cast<reference_generator::result_type>(seed)};
-  auto [steps, solved_gen] = solve_prng(gen);
-  std::printf("solved in %lld samples\n", static_cast<long long>(steps));
-  
+  auto [steps, solved_gen] = reconstruct_prng([&gen] { return gen(); });
+  std::printf(
+    "%s generator from seed %llu\n",
+    gen != solved_gen ? "failed to reconstruct" : "reconstructed",
+    seed);
+  std::printf("from %lld samples\n", static_cast<long long>(steps));
   {
     const auto& src_table = gen.table();
     const auto& sol_table = solved_gen.table();
@@ -55,11 +71,24 @@ int main(int argc, char* argv[])
     }
   }
   
-  if (gen != solved_gen) {
-    std::printf("generator was not correctly solved for this seed");
+  if (gen != solved_gen)
     return EXIT_FAILURE;
-  }
   
-  std::printf("generator from seed %llu was solved\n", seed);
   return EXIT_SUCCESS;
+}
+
+namespace
+{
+  reconstruction_result reconstruct_prng(
+    std::function<reference_generator::result_type()> gen) noexcept
+  {
+    long long steps = 0;
+    std::optional<reference_generator> result;
+    for (solver s; !result; result = s.feed(gen()))
+    {
+      ++steps;
+    }
+    
+    return reconstruction_result{.steps = steps, .gen = *result};
+  }
 }
