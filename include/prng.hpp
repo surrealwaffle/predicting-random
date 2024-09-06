@@ -12,6 +12,9 @@
 
 #include "cyclic_fixed_queue.hpp"
 
+namespace predicting_random
+{
+
 /**
  * \brief An implementation of a PRNG used in glibc as described here:
  *        https://www.mathstat.dal.ca/~selinger/random/
@@ -105,6 +108,8 @@ constexpr auto reference_generator::table_from_seed(result_type seed) noexcept
     result.pop_and_push(result_type(result.front()));
   
   return result;
+}
+
 }
 
 #endif // PREDICTING_RANDOM_PRNG_HPP

@@ -75,6 +75,9 @@
 #include "cyclic_fixed_queue.hpp"
 #include "prng.hpp"
 
+namespace predicting_random
+{
+
 /**
  * \brief A specialized type representing 32x32 matrices over GF(2) which maintains
  *        the matrix in row semi-canonical form - that is, pivots are always along
@@ -292,6 +295,8 @@ constexpr bool semicanonical_b32x32::push_row(row_type row) noexcept
   rows_[pivot] = row;
   
   return true;
+}
+
 }
 
 #endif // PREDICTING_RANDOM_SOLVER_HPP

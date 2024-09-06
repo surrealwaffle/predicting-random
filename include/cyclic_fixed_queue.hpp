@@ -16,6 +16,9 @@
 #include <memory>
 #include <utility>
 
+namespace predicting_random
+{
+
 template<typename BidirIt>
 class wrap_around_iterator
 {
@@ -388,5 +391,7 @@ private:
   difference_type front_ = 0;
   difference_type size_ = 0;
 };
+
+}
 
 #endif // PREDICTING_RANDOM_CYCLIC_FIXED_QUEUE_HPP

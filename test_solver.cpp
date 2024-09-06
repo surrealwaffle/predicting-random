@@ -17,6 +17,8 @@
 #include "prng.hpp"
 #include "solver.hpp"
 
+using predicting_random::reference_generator;
+
 namespace
 {
   struct reconstruction_result
@@ -82,6 +84,8 @@ namespace
   reconstruction_result reconstruct_prng(
     std::function<reference_generator::result_type()> gen) noexcept
   {
+    using predicting_random::solver;
+    
     long long steps = 0;
     std::optional<reference_generator> result;
     for (solver s; !result; result = s.feed(gen()))
