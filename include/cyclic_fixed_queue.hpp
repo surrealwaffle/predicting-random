@@ -378,19 +378,7 @@ public:
    *
    * This operation invalidates iterators on this queue.
    */
-  constexpr reference pop_and_push(const value_type& value)
-  {
-    pop();
-    return push(value);
-  }
-  
-  /**
-   * \brief Pops the first element off the queue and adds \a value to the end of 
-   *        the queue.
-   *
-   * This operation invalidates iterators on this queue.
-   */
-  constexpr reference pop_and_push(value_type&& value)
+  constexpr reference pop_and_push(value_type value)
   {
     pop();
     return push(std::move(value));

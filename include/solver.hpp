@@ -203,7 +203,7 @@ constexpr solver::solver() noexcept
     parity.push(static_cast<std::uint32_t>(1uL << i));
   
   for (int i = 31; i < 34; ++i)
-    parity.pop_and_push(std::uint32_t(parity.front()));
+    parity.pop_and_push(parity.front());
   
   for (int i = 34; i < 344; ++i)
     parity.pop_and_push(parity(-3) ^ parity(-31)); // addition, mod 2
