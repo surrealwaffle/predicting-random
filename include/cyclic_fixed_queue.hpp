@@ -19,6 +19,10 @@
 namespace predicting_random
 {
 
+/**
+ * \brief A bidirectional iterator wrapper which provides an iterator that cycles 
+ *        through a given range.
+ */
 template<typename BidirIt>
 class wrap_around_iterator
 {
@@ -29,13 +33,19 @@ public:
   using reference = typename std::iterator_traits<BidirIt>::reference;
   using iterator_category = std::bidirectional_iterator_tag;
   
-  friend constexpr bool operator==(const wrap_around_iterator& lhs, const wrap_around_iterator& rhs) noexcept
+  friend constexpr bool operator==(
+    const wrap_around_iterator& lhs, 
+    const wrap_around_iterator& rhs) noexcept
   {
     return lhs.it == rhs.it;
   }
   
   wrap_around_iterator() = default;
   
+  /**
+   * \brief Constructs an iterator that cycles over the range `[reset, last)`, 
+   *        starting at \a it.
+   */
   explicit constexpr wrap_around_iterator(BidirIt it, BidirIt last, BidirIt reset) noexcept
     : it(it), last(last), reset(reset) {}
   
