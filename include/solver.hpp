@@ -80,8 +80,16 @@ namespace predicting_random
 
 /**
  * \brief A specialized type representing 32x32 matrices over GF(2) which maintains
- *        the matrix in row semi-canonical form - that is, pivots are always along
- *        the diagonal and zero rows are permitted to space the pivot rows.
+ *        the matrix in row semi-canonical form.
+ *
+ * A matrix is in semi-canonical form if its pivots are always along the diagonal, 
+ * with zero rows occupying the space between pivot rows. The matrix can be 
+ * converted to row-canonical form by moving rows up into the zero rows.
+ *
+ * Rows are fed into this matrix by #push_row. This member function will only add 
+ * the row if it is not a linear combination of non-zero rows already present. As a 
+ * result of maintaining the semi-canonical form, Gaussian elimination takes place 
+ * in incremental steps.
  */
 class semicanonical_b32x32
 {
@@ -110,7 +118,7 @@ public:
    * The row is pushed into the matrix if and only if it is not a linear combination
    * of rows present.
    *
-   * \return \c trie if and only if \a row was pushed into the matrix.
+   * \return \c true if and only if \a row was pushed into the matrix.
    */
   constexpr bool push_row(row_type row) noexcept;
   
@@ -144,10 +152,10 @@ public:
   [[nodiscard]] constexpr std::optional<generator_type> feed(value_type value) noexcept;
   
 private:
-  cyclic_fixed_queue<value_type, 31> history;    ///< Keeps track of recent values.
-  cyclic_fixed_queue<std::uint32_t, 31> parity;  ///< Parities of recent states in
-                                                 ///< terms of initial system
-                                                 ///< parities.
+  cyclic_fixed_queue<value_type, 31> history;   ///< Keeps track of recent values.
+  cyclic_fixed_queue<std::uint32_t, 31> parity; ///< Parities of recent states in
+                                                ///< terms of initial system
+                                                ///< parities.
   
   struct {
     int rank = 0; ///< The rank of #matrix.
@@ -253,6 +261,7 @@ constexpr std::uint32_t solver::solve_parities() noexcept
   for (int i = 0; i < 32; ++i) {
     const auto row = equations.matrix[i];
     assert(std::popcount(row) <= 2);
+    
     initial_state |= (row >> 31) << i; // last bit indicates parity
   }
   
